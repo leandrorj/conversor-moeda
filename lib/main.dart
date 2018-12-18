@@ -9,6 +9,7 @@ const request = 'https://api.hgbrasil.com/finance?format=json&key=827016a7';
 void main() async {
   runApp(MaterialApp(
     home: Home(),
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       hintColor: Colors.amber,
       primaryColor: Colors.white,
@@ -22,34 +23,55 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  double dolar;
+  double euro;
 
   final realController = TextEditingController();
   final dolarController = TextEditingController();
   final euroController = TextEditingController();
 
-  void _realChanged(String text){
-
+  void _realChanged(String text) {
+    double real = double.parse(text);
+    dolarController.text = (real / dolar).toStringAsPrecision(2);
+    euroController.text = (real / euro).toStringAsPrecision(2);
   }
 
-  void _dolarChanged(String text){
-
+  void _dolarChanged(String text) {
+    double dolar = double.parse(text);
+    realController.text = (dolar * this.dolar).toStringAsPrecision(2);
+    euroController.text = (dolar * this.dolar / euro).toStringAsPrecision(2);
   }
 
-  void _euroChanged(String text){
-
+  void _euroChanged(String text) {
+    double euro = double.parse(text);
+    realController.text = (euro * this.euro).toStringAsPrecision(2);
+    dolarController.text = (euro * this.euro / dolar).toStringAsPrecision(2);
   }
 
-  double dolar;
-  double euro;
+  void _resetFields() {
+    setState(() {
+      FocusScope.of(context).requestFocus(FocusNode());
+      realController.clear();
+      dolarController.clear();
+      euroController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("\$ Conversor \$"),
         backgroundColor: Colors.amber,
         centerTitle: true,
+        title: Text("\$ Conversor \$", style: TextStyle(fontSize: 25.0),),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () {
+                _resetFields();
+              })
+        ],
       ),
       body: FutureBuilder<Map>(
           future: getData(),
@@ -87,11 +109,14 @@ class _HomeState extends State<Home> {
                           size: 150.0,
                           color: Colors.amber,
                         ),
-                        buildTextField("Reais", "R\$ ", realController, _realChanged),
+                        buildTextField(
+                            "Reais", "R\$ ", realController, _realChanged),
                         Divider(),
-                        buildTextField("Dólares", "US\$ ", dolarController, _dolarChanged),
+                        buildTextField(
+                            "Dólares", "US\$ ", dolarController, _dolarChanged),
                         Divider(),
-                        buildTextField("Euros", "€ ", euroController, _euroChanged),
+                        buildTextField(
+                            "Euros", "€ ", euroController, _euroChanged),
                       ],
                     ),
                   );
@@ -102,7 +127,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget buildTextField(String label, String prefix, TextEditingController control, Function f) {
+Widget buildTextField(
+    String label, String prefix, TextEditingController control, Function f) {
   return TextField(
     controller: control,
     decoration: InputDecoration(
