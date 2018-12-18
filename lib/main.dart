@@ -64,7 +64,10 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.amber,
         centerTitle: true,
-        title: Text("\$ Conversor \$", style: TextStyle(fontSize: 25.0),),
+        title: Text(
+          "\$ Conversor \$",
+          style: TextStyle(fontSize: 25.0),
+        ),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.refresh),

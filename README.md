@@ -2,7 +2,12 @@
 
 A new Flutter application.
 
-## Getting Started
+## Resumo
+
+Neste app do curso "Curso Completo de Criação de Apps Android e iOS com Flutter
+ - Udemy, foi utilizado uma API JSON para requisicao dos valores das moedas"
+
+### Getting Started
 
 This project is a starting point for a Flutter application.
 
